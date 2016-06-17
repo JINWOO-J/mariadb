@@ -1,0 +1,32 @@
+#
+# These groups are read by MariaDB command-line tools
+# Use it for options that affect only one utility
+#
+
+[mysql]
+
+character_set_client=utf8
+[mysql_upgrade]
+
+character_set_client=utf8
+[mysqladmin]
+
+character_set_client=utf8
+[mysqlbinlog]
+
+character_set_client=utf8
+[mysqlcheck]
+
+character_set_client=utf8
+[mysqldump]
+
+character_set_client=utf8
+[mysqlimport]
+
+character_set_client=utf8
+[mysqlshow]
+
+character_set_client=utf8
+[mysqlslap]
+
+character_set_client=utf8

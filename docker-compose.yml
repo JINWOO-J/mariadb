@@ -1,0 +1,13 @@
+mariadb:
+  image: mariadb:10.1.14
+  command: bash -c "while [ 0 ]; do sleep 1;done"
+  volumes:
+    - ./initdb:/docker-entrypoint-initdb.d
+    - /etc/localtime:/etc/localtime:ro
+  expose:
+    - '3306'
+  environment:
+    MYSQL_ROOT_PASSWORD: root
+    MYSQL_DATABASE: apiserver
+    MYSQL_USER: apiserver_user
+    MYSQL_PASSWORD: apiserver_pass
