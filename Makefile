@@ -24,8 +24,8 @@ build_hub:
 	git add .
 	git commit -m "$(NAME):$(VERSION) by Makefile"
 
-	git tag -d $(NAME)
-	git push origin :tags/$(NAME)
+	git tag -d $(VERSION)
+	git push origin :tags/$(VERSION)
 	
 	git tag -a "$(VERSION)" -m "$(VERSION) by Makefile"
 	git push origin --tags
