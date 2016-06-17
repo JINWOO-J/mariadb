@@ -2,6 +2,7 @@ REPO = dr.ytlabs.co.kr
 REPO_HUB = jinwoo
 NAME = mariadb
 VERSION = 10.2
+TAGS = "$(shell git tag)"
 include ENVAR
 
 .PHONY: all build push test tag_latest release ssh bash
@@ -23,9 +24,12 @@ build_hub:
 	echo "TRIGGER_KEY" ${TRIGGERKEY}
 	git add .
 	git commit -m "$(NAME):$(VERSION) by Makefile"
-
+	
+	echo $(TAGS)
 	git tag -d $(VERSION)
-	git push origin :tags/$(VERSION)
+	git push origin :tags/$(VERSION)		
+
+    
 	
 	git tag -a "$(VERSION)" -m "$(VERSION) by Makefile"
 	git push origin --tags
