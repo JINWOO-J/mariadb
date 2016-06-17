@@ -23,7 +23,6 @@ build_hub:
 	echo "TRIGGER_KEY" ${TRIGGERKEY}
 	git add .
 	git commit -m "$(NAME):$(VERSION) by Makefile"
-	git tag -d $(VERSION)
 	git tag -a "$(VERSION)" -m "$(VERSION) by Makefile"
 	git push origin --tags
 	
