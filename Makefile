@@ -23,9 +23,12 @@ build_hub:
 	echo "TRIGGER_KEY" ${TRIGGERKEY}
 	git add .
 	git commit -m "$(NAME):$(VERSION) by Makefile"
+	git tag -d $(NAME)
+	git push origin :tags/$(NAME)
+	
 	git tag -a "$(VERSION)" -m "$(VERSION) by Makefile"
 	git push origin --tags
-	
+		
 	curl -H "Content-Type: application/json" --data '{"source_type": "Tag", "source_name": "$(VERSION)"}' -X POST https://registry.hub.docker.com/u/jinwoo/${NAME}/trigger/${TRIGGERKEY}/
 
 tag_hub:
