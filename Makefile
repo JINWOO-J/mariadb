@@ -1,7 +1,7 @@
 REPO = dr.ytlabs.co.kr
 REPO_HUB = jinwoo
 NAME = mariadb
-VERSION = 10.1
+VERSION = 10.2
 include ENVAR
 
 .PHONY: all build push test tag_latest release ssh bash
