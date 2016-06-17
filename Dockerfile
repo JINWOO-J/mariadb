@@ -7,7 +7,7 @@ WORKDIR /root
 RUN groupadd --gid 1000 mysql
 RUN useradd --uid 1000 --gid 1000 mysql
 RUN ln -sf /usr/share/zoneinfo/Asia/Seoul /etc/localtime
-RUN apt-get install -y software-properties-common
+RUN apt-get update && apt-get install -y software-properties-common
 RUN apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0xcbcb082a1bb943db
 RUN add-apt-repository 'deb [arch=amd64,i386] http://ftp.kaist.ac.kr/mariadb/repo/10.1/ubuntu trusty main'
 RUN apt-get update
