@@ -12,10 +12,10 @@ RUN apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0xcbcb082a
 RUN add-apt-repository 'deb [arch=amd64,i386] http://ftp.kaist.ac.kr/mariadb/repo/10.1/ubuntu trusty main'
 RUN apt-get update
 RUN apt-get -y install mariadb-server curl gzip
-ADD my.cnf /etc/mysql/my.cnf
-ADD client.cnf /etc/my.cnf.d/client.cnf
+ADD files/my.cnf /etc/mysql/my.cnf
+ADD files/client.cnf /etc/my.cnf.d/client.cnf
 RUN rm -rf /var/lib/mysql/*
-ADD run /usr/local/bin/run
+ADD files/run.sh /usr/local/bin/run
 RUN chmod 750 /usr/local/bin/run
 
 EXPOSE 3306

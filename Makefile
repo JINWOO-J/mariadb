@@ -40,7 +40,7 @@ tag_hub:
 	curl -H "Content-Type: application/json" --data '{"source_type": "Tag", "source_name": "$(VERSION)"}' -X POST https://registry.hub.docker.com/u/jinwoo/${NAME}/trigger/${TRIGGERKEY}/
 
 bash:
-	docker run --entrypoint="bash" --rm -it $(NAME):$(VERSION)
+	docker run -v $(pwd)/data:/var/lib/mysql --entrypoint="bash" --rm -it $(NAME):$(VERSION) 
 
 tag_latest:
 	docker tag -f $(REPO)/$(NAME):$(VERSION) $(REPO)/$(NAME):latest
