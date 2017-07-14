@@ -1,11 +1,17 @@
 #!/bin/bash
 set -e
+MYSQL_SOCK=${MYSQL_SOCK:-"/tmp/mysql.sock"}
 
 MYSQL_DATABASE=${MYSQL_DATABASE:-""}
 MYSQL_USER=${MYSQL_USER:-""}
 MYSQL_PASSWORD=${MYSQL_PASSWORD:-""}
 MYSQL_IMPORT=${MYSQL_IMPORT:-""}
 VOLUME_HOME="/var/lib/mysql"
+
+if [ ! -z "$MYSQL_SOCK" ] ; then
+    sed -i -e "s/.*socket\s*=\s*.*/socket:q! = ${MYSQL_SOCK}/g" /etc/mysql/my.cnf
+fi
+
 
 #ln -sf /tmp/mysql.sock /var/lib/mysql/mysql.sock
 

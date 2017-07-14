@@ -1,28 +1,28 @@
 REPO = dr.ytlabs.co.kr
 REPO_HUB = yelloo2o
 NAME = mariadb
-VERSION = 10.1
+VERSION = 10.3
 TAGNAME = $(VERSION)-dev
 TAGS = "$(shell git tag)"
 get_last_container := $(shell docker ps -l | grep -v CONTAINER  | awk '{print $$1}')
 commit_docker = $(shell docker commit $$1 | cut -d ":" -f 2)
 # include ENVAR
 
-.PHONY: all build push test tag_latest release ssh bash
+.PHONY: all build push test tag_latest release ssh bash changeconfig
 
 all: build
 
 changeconfig:
-        @CONTAINER_ID=$(shell docker run -d $(REPO_HUB)/$(NAME):$(TAGNAME)) ;\
-         echo "COPY TO [$$CONTAINER_ID]" ;\
-         docker cp "files/." "$$CONTAINER_ID":/ ;\
-         docker exec -it "$$CONTAINER_ID" sh -c "echo `date +%Y-%m-%d:%H:%M:%S` > /.made_day" ;\
-         echo "COMMIT [$$CONTAINER_ID]" ;\
-         docker commit -m "Change config `date`" "$$CONTAINER_ID" $(REPO_HUB)/$(NAME):$(TAGNAME) ;\
-         echo "STOP [$$CONTAINER_ID]" ;\
-         docker stop "$$CONTAINER_ID" ;\
-         echo "CLEAN UP [$$CONTAINER_ID]" ;\
-         docker rm "$$CONTAINER_ID"
+	    @CONTAINER_ID=$(shell docker run -d $(REPO_HUB)/$(NAME):$(TAGNAME)) ;\
+    	 echo "COPY TO [$$CONTAINER_ID]" ;\
+	     docker cp "files/." "$$CONTAINER_ID":/ ;\
+	     docker exec -it "$$CONTAINER_ID" sh -c "echo `date +%Y-%m-%d:%H:%M:%S` > /.made_day" ;\
+	     echo "COMMIT [$$CONTAINER_ID]" ;\
+	     docker commit -m "Change config `date`" "$$CONTAINER_ID" $(REPO_HUB)/$(NAME):$(TAGNAME) ;\
+	     echo "STOP [$$CONTAINER_ID]" ;\
+	     docker stop "$$CONTAINER_ID" ;\
+	     echo "CLEAN UP [$$CONTAINER_ID]" ;\
+	     docker rm "$$CONTAINER_ID"
 
 build:
 	docker build --no-cache --rm=true --build-arg VERSION=$(VERSION) -t $(REPO_HUB)/$(NAME):$(TAGNAME) .
