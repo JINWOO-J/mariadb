@@ -1,5 +1,5 @@
 FROM ubuntu:16.04
-MAINTAINER jinwoo <jinwoo@yellomobile.com>
+MAINTAINER jinwoo <jinwoo@iconloop.com>
 
 ARG VERSION
 ENV VERSION $VERSION
@@ -21,5 +21,6 @@ ADD files/client.cnf /etc/my.cnf.d/client.cnf
 RUN rm -rf /var/lib/mysql/*
 ADD files/run.sh /usr/local/bin/run
 RUN chmod 750 /usr/local/bin/run
+ENTRYPOINT /usr/local/bin/run
 
 EXPOSE 3306

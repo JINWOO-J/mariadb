@@ -1,8 +1,9 @@
 REPO = dr.ytlabs.co.kr
-REPO_HUB = yelloo2o
+REPO_HUB = jinwoo
 NAME = mariadb
-VERSION = 10.3
-TAGNAME = $(VERSION)-dev
+VERSION = 10.4
+#VERSION = 10.5.5
+TAGNAME = $(VERSION)
 TAGS = "$(shell git tag)"
 get_last_container := $(shell docker ps -l | grep -v CONTAINER  | awk '{print $$1}')
 commit_docker = $(shell docker commit $$1 | cut -d ":" -f 2)
@@ -55,7 +56,7 @@ tag_hub:
 	curl -H "Content-Type: application/json" --data '{"source_type": "Tag", "source_name": "$(VERSION)"}' -X POST https://registry.hub.docker.com/u/jinwoo/${NAME}/trigger/${TRIGGERKEY}/
 
 bash:
-	docker run -v $(PWD)/data:/var/lib/mysql --entrypoint="bash" --rm -it $(REPO_HUB)/$(NAME):$(VERSION)
+	docker run -v $(PWD)/data:/var/lib/mysql -v $(PWD)/files/run.sh:/usr/local/bin/run --entrypoint="bash" --rm -it $(REPO_HUB)/$(NAME):$(VERSION)
 
 tag_latest:
 	docker tag -f $(REPO)/$(NAME):$(VERSION) $(REPO)/$(NAME):latest

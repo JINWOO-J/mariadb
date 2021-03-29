@@ -1,21 +1,46 @@
 #!/bin/bash
-set -e
+#set -e
 MYSQL_SOCK=${MYSQL_SOCK:-"/tmp/mysql.sock"}
 
 MYSQL_DATABASE=${MYSQL_DATABASE:-""}
 MYSQL_USER=${MYSQL_USER:-""}
 MYSQL_PASSWORD=${MYSQL_PASSWORD:-""}
+
 MYSQL_IMPORT=${MYSQL_IMPORT:-""}
+MYSQL_IMPORT_SQL=${MYSQL_IMPORT_SQL:-""}
+
+MYSQL_USE_SLOW_QUERY=${MYSQL_USE_SLOW_QUERY:-"false"}
+MYSQL_SLOW_QUERY_TIME=${MYSQL_SLOW_QUERY_TIME:-"1"}
+MYSQL_SLOW_QUERY_FILE=${MYSQL_SLOW_QUERY_FILE:-"/var/log/mysql/slow.log"}
+
 VOLUME_HOME="/var/lib/mysql"
 
 if [ ! -z "$MYSQL_SOCK" ] ; then
-    sed -i -e "s/.*socket\s*=\s*.*/socket:q! = ${MYSQL_SOCK}/g" /etc/mysql/my.cnf
+    sed -i -e "s|.*socket=.*|socket=${MYSQL_SOCK}|g" /etc/mysql/my.cnf
 fi
 
+if [[ ! -f /var/run/mysqld/mysqld.pid ]]; then
+    mkdir -p /var/run/mysqld
+    chown -R mysql:mysql /var/run/mysqld
 
-#ln -sf /tmp/mysql.sock /var/lib/mysql/mysql.sock
+fi
+
+ln -sf /tmp/mysql.sock /var/lib/mysql/mysql.sock
+
+
 
 chown -R mysql:mysql $VOLUME_HOME
+
+extend_conf_dir="/etc/my.cnf.d"
+mkdir -p $extend_conf_dir
+
+if [[ $MYSQL_USE_SLOW_QUERY == "true" ]]; then
+  echo "[mysqld]" > $extend_conf_dir/slow.cnf
+  echo "slow_query_log=1" >> $extend_conf_dir/slow.cnf
+  echo "slow_query_log_file=${MYSQL_SLOW_QUERY_FILE}" >> $extend_conf_dir/slow.cnf
+  echo "long_query_time=${MYSQL_SLOW_QUERY_TIME}" >> $extend_conf_dir/slow.cnf
+  chown -R mysql:mysql $extend_conf_dir
+fi
 
 if [[ ! -d $VOLUME_HOME/mysql ]]; then
 
@@ -62,9 +87,15 @@ if [[ $MYSQL_DATABASE != "" ]]; then
 fi
 
 if [[ $MYSQL_IMPORT != "" ]]; then
-	echo "=> Importing database a database called to '$MYSQL_DATABASE'"
+	echo "=> [CURL] Importing database a database called to '$MYSQL_DATABASE'"
 	curl -s $MYSQL_IMPORT -o yt-schema.gz ; gzip -f -d yt-schema.gz
-	mysql -u root $MYSQL_DATABASE < /root/yt-schema
+	mysql -u root $MYSQL_DATABASE < /root/schema.sql
+fi
+
+if [[ $MYSQL_IMPORT_SQL != "" ]]; then
+    echo "=> [SQL] Importing database a database called to '$MYSQL_DATABASE'"
+    echo $MYSQL_IMPORT_SQL > temp.sql
+    mysql -uroot $MYSQL_DATABASE < temp.sql;
 fi
 
 kill %1 > /dev/null 2>&1
